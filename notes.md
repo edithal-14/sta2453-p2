@@ -54,7 +54,7 @@ Note that you can consolidate the last two variables of interest for the pure pr
 - An ethical way to do this which also models heterogeneity is to model the frequency and severity separately
 
 - Loss Cost model
-  - $$ ExpectedLoss = Y_s * Y_f $$
+  - ExpectedLoss = $Y_s$ * $Y_f$
 
 - Frequency Model
   - Model should be able to predict many zeros
