@@ -3,15 +3,17 @@
 #### Context
 
 - Bought data of now bankrupt insurance company to start your own insurance company
+
   - In reality you will be out bided by bigger companies at the auction
 
-- Create a premium model for potential clients to earn a profit
+- Create a premium model for potential clients and earn yourself some profit
 
 - Evaluation will be done using a market simulation where your model will compete against others.
 
 #### Misc
 
 - Insurance companies bring underwriters and inspectors when customers make a claim
+
 - They also have to pay taxes
 
 ### Tips
@@ -28,24 +30,34 @@
 
 #### Premium formula
 
-These components can be broken down further, however, we are going to use the pure premium method to calculate premiums 
+- These components can be broken down further, however, we are going to use the pure premium method to calculate premiums 
 as written in Chapter 8 of Werner & Modlin.
 
 $$ PurePremium = \frac{ExpectedLoss * (1 + LossAllocatedExpenses) + FixedExpensesPerPolicy}{1 - VariableExpensesPerPolicy - ProfitLoading} $$
 
-- $ ExpectedLoss $ the amount of loss the targeted client is predicted to occur.  
+- $ExpectedLoss$ the amount of loss the targeted client is predicted to occur.  
 
-- $ LossAllocatedExpenses $ are claim-related expenses that are directly attributable to a specific claim; for
+- $LossAllocatedExpenses$ are claim-related expenses that are directly attributable to a specific claim; for
 example, fees associated with outside legal counsel hired to defend a claim can be directly
 assigned to a specific claim.
 
-- $ FixedExpensesPerPolicy $ day-to-day running expenses for facilitating insurance coverage overall. Commercial rent, server costs, etc. 
+- $FixedExpensesPerPolicy$ day-to-day running expenses for facilitating insurance coverage overall. Commercial rent, server costs, etc. 
 
-- $ VariableExpensesPerPolicy $, expenses which are unrelated to specific policies, and, could be specific to the annual year. E.g. Covid pandemic of 2020-2021 could result in lower insurance claims therefore having a smaller  $ VariableExpensesPerPolicy $ for that annual year. 
+- $VariableExpensesPerPolicy$, expenses which are unrelated to specific policies, and, could be specific to the annual year. E.g. 
+Covid pandemic of 2020-2021 could result in lower insurance claims therefore having a smaller $VariableExpensesPerPolicy$ for that 
+annual year. 
 
-- $ ProfitLoading $, similar to a profit margin; you as an executive, get to determine on how much to charge your customers.
+- $ProfitLoading$, similar to a profit margin; you as an executive, get to determine on how much to charge your customers.
 
-Note that you can consolidate the last two variables of interest for the pure premium into one number, ultimately these are the annual business decisions the insurance company has to make. 
+- Note that you can consolidate the last two variables of interest for the pure premium into one number, ultimately these are the 
+annual business decisions the insurance company has to make. 
+
+#### Constants to use for the project
+
+- $LossAllocatedExpenses$ (LAE): 0.2
+- $FixedExpensePerPolicy$: 500
+- $VariableExpensesPerPolicy$: 0.4
+- You have to determine $ProfitLoading$ 
 
 #### Modelling expected loss
 
@@ -87,7 +99,7 @@ Note that you can consolidate the last two variables of interest for the pure pr
 $$\mathbb{E}[\textit{loss}] = \mathbb{E}[Y_s Y_f]$$
 
 - Twidie distribution
-  - $Y_s$ (severity) and $Y_f$ (frequency) are modelled separately
+  - $Y_s$ (severity) and $Y_f$ (frequency) are modelled together
 
 - In practice, we model them separately
 
