@@ -4,7 +4,7 @@
 
 - Bought data of now bankrupt insurance company to start your own insurance company
 
-  - In reality you will be out bided by bigger companies at the auction
+- In reality you will be out bided by bigger companies at the auction
 
 - Create a premium model for potential clients and earn yourself some profit
 
@@ -131,3 +131,21 @@ $$ \mathbb{E}[Y_s Y_f] = \mathbb{E}[Y_s] \mathbb{E}[Y_f] $$
   - SDV Python library
   - Gaussian Copula
   - Need to pick marginals correctly
+
+
+### Write a report about why bankrupt
+
+- Pages
+  - Model development scheme and training
+    - Two paragraphs describing your model
+    - Fitting procedure
+  - Model performance statistics based on analysis of premiums charge and claims endured
+    - Some commentary on how far off you were
+  - Future directions and business strategies discussed in class
+    - Minimize risk as much as possible
+    - Over charging for premiums is not a bad idea
+    - Raise risky customers premium to get them off your portfolio
+
+### Grades
+- 4 is an A+
+- 3 is an A
