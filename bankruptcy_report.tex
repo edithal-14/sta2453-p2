@@ -1,0 +1,241 @@
+\documentclass{article}
+
+\usepackage{fancyhdr}
+\usepackage{extramarks}
+\usepackage{amsmath}
+\usepackage{amsthm}
+\usepackage{amsfonts}
+\usepackage{tikz}
+\usepackage[plain]{algorithm}
+\usepackage{algpseudocode}
+\usepackage{bbm}
+\usepackage{hyperref}
+
+%
+% For code output
+% From: https://www.overleaf.com/learn/latex/Code_listing
+%
+\usepackage{listings}
+\usepackage{xcolor}
+
+\definecolor{codegreen}{rgb}{0,0.6,0}
+\definecolor{codegray}{rgb}{0.5,0.5,0.5}
+\definecolor{codepurple}{rgb}{0.58,0,0.82}
+\definecolor{backcolour}{rgb}{0.95,0.95,0.92}
+
+\lstdefinestyle{mystyle}{
+    backgroundcolor=\color{backcolour},   
+    commentstyle=\color{codegreen},
+    keywordstyle=\color{magenta},
+    numberstyle=\tiny\color{codegray},
+    stringstyle=\color{codepurple},
+    basicstyle=\ttfamily\footnotesize,
+    breakatwhitespace=false,         
+    breaklines=true,                 
+    captionpos=b,                    
+    keepspaces=true,                 
+    numbers=left,                    
+    numbersep=5pt,                  
+    showspaces=false,                
+    showstringspaces=false,
+    showtabs=false,                  
+    tabsize=2
+}
+
+\lstset{style=mystyle}
+
+\usetikzlibrary{automata,positioning}
+%
+% Basic Document Settings
+%
+
+\topmargin=-0.45in
+\evensidemargin=0in
+\oddsidemargin=0in
+\textwidth=6.5in
+\textheight=9.0in
+\headsep=0.25in
+
+\linespread{1.1}
+
+\pagestyle{fancy}
+\lhead{\hmwkAuthorName}
+\chead{\hmwkClass\ : \hmwkTitle}
+\rhead{\firstxmark}
+\lfoot{\lastxmark}
+\cfoot{\thepage}
+
+\renewcommand\headrulewidth{0.4pt}
+\renewcommand\footrulewidth{0.4pt}
+
+\setlength\parindent{0pt}
+
+%
+% Create Problem Sections
+%
+
+\newcommand{\enterProblemHeader}[1]{
+    \nobreak\extramarks{}{Problem \arabic{#1} continued on next page\ldots}\nobreak{}
+    \nobreak\extramarks{Problem \arabic{#1} (continued)}{Problem \arabic{#1} continued on next page\ldots}\nobreak{}
+}
+
+\newcommand{\exitProblemHeader}[1]{
+    \nobreak\extramarks{Problem \arabic{#1} (continued)}{Problem \arabic{#1} continued on next page\ldots}\nobreak{}
+    \stepcounter{#1}
+    \nobreak\extramarks{Problem \arabic{#1}}{}\nobreak{}
+}
+
+\setcounter{secnumdepth}{0}
+\newcounter{partCounter}
+\newcounter{homeworkProblemCounter}
+\setcounter{homeworkProblemCounter}{1}
+\nobreak\extramarks{Problem \arabic{homeworkProblemCounter}}{}\nobreak{}
+
+%
+% Homework Problem Environment
+%
+% This environment takes an optional argument. When given, it will adjust the
+% problem counter. This is useful for when the problems given for your
+% assignment aren't sequential. See the last 3 problems of this template for an
+% example.
+%
+\newenvironment{homeworkProblem}[1][-1]{
+    \ifnum#1>0
+        \setcounter{homeworkProblemCounter}{#1}
+    \fi
+    \section{Problem \arabic{homeworkProblemCounter}}
+    \setcounter{partCounter}{1}
+    \enterProblemHeader{homeworkProblemCounter}
+}{
+    \exitProblemHeader{homeworkProblemCounter}
+}
+
+%
+% Homework Details
+
+%   - Title
+%   - Submission date
+%   - Course code
+%   - Author
+%
+
+\newcommand{\hmwkTitle}{Project 2 - Bankruptcy Report}
+\newcommand{\hmwkDueDate}{March 23, 2023, University of Toronto}
+\newcommand{\hmwkClass}{STA 2453}
+\newcommand{\hmwkAuthorName}{\textbf{Vignesh Edithal}}
+
+%
+% Title Page
+%
+
+\title{
+    \vspace{2in}
+    \textmd{\textbf{\hmwkClass:\ \hmwkTitle}}\\
+    \normalsize\vspace{0.1in}\small{\hmwkDueDate}\\
+    \vspace{3in}
+}
+
+\author{\hmwkAuthorName}
+\date{}
+
+\renewcommand{\part}[1]{\textbf{\large Part \Alph{partCounter}}\stepcounter{partCounter}\\}
+
+
+\begin{document}
+
+\maketitle
+
+\pagebreak
+
+\begin{homeworkProblem}
+
+\textbf{Model development scheme and training}
+
+\vspace{10px}
+
+Data pre-processing
+
+\begin{itemize}
+    \item City and Province are concatenated to get Address column which is then frequency encoded such that top 9 frequent addresses are mapped from 1 to 9 and others 10.
+    \item AmountOfInsurance and Earnings are transformed by first dividing by 1000 then taking log base 10.
+    \item BusinessType is encoded based on categorical codes.
+    \item The 250k rows of policies data with the above transformation are clustered into 12 categories (corresponding to best BIC score) using GaussianMixture API from sklearn.
+    \item Policies data and Claims data are merged using outer join on BusinessID.
+    \item Rows are de-duplicated and NumClaims and ExpectedSeverity columns are added by aggregating over duplicate BusinessID rows.
+\end{itemize}
+
+\vspace{10px}
+
+NumClaims Model
+
+\begin{itemize}
+    \item All 250k rows are considered for training data, NumClaims for businesses which did not claim is set to 0.
+    \item XGBRegressor API from sklearn was fit on training data with 5 fold cross validation and grid search for hyperparameter tuning.
+    \item Best hyperparameters found, n\_estimators: 200, learning\_rate: 0.1, max\_depth: 20, subsample: 0.6, colsample\_bytree: 0.95
+\end{itemize}
+
+\vspace{10px}
+
+ExpectedSeverity Model
+
+\begin{itemize}
+    \item Only 8472 rows are considered for training data, these are the business which have claimed at least once.
+    \item XGBRegressor API from sklearn was fit on training data with 5 fold cross validation and grid search for hyperparameter tuning.
+    \item Best hyperparameters found, n\_estimators: 200, learning\_rate: 0.1, max\_depth: 20, subsample: 0.6, colsample\_bytree: 0.95
+\end{itemize}
+
+Inference
+
+\begin{itemize}
+    \item ExpectedSeverity and NumClaims are predicted and plugged into the Loss Cost formula with given constants
+    \item ProfitLoading which can range from 0 to 0.6 was set to a value of 0.3
+\end{itemize}
+
+\end{homeworkProblem}
+
+\pagebreak
+
+\begin{homeworkProblem}
+
+\textbf{Model performance statistics}
+
+\vspace{10px}
+
+\begin{itemize}
+    \item Out of 2721 customers, I was awarded 577 (around 25\%) customers. This is a lot of customers given there were 18 competitors in the market
+    \item The highest loss I have endured is \$559k
+    \item I have endured 67 losses and the rest customers resulted profit. However, the total loss is \$726k
+\end{itemize}
+
+\end{homeworkProblem}
+
+\pagebreak
+
+\begin{homeworkProblem}
+
+\textbf{Future Direction and Business Strategies}
+
+\vspace{10px}
+
+Business Strategies
+
+\begin{itemize}
+    \item It is a good idea to overcharge to minimize risk.
+    \item The goal of insurance premium modelling is to minimize risk as much as possible.
+    \item One way of minimizing risk is to manually increase the premium of risky customers (customers with expected severity over a certain threshold)
+\end{itemize}
+
+\vspace{10px}
+
+Future directions to prevent bankruptcy
+
+\begin{itemize}
+    \item I increased my profit loading from 0.3 to 0.5 and generated new premiums.
+    \item The premiums csv was downloaded and my premiums were updated to new values.
+    \item dirchlet\_market.py script was run with new market values values to identify which customers got awarded to me.
+    \item Upon analysis of profit it was found that I made a profit of \$1,003,871
+\end{itemize}
+
+\end{homeworkProblem}
+
+\end{document}

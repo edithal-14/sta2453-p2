@@ -8,7 +8,10 @@ import pandas as pd
 
 # load policy premium offers. 
 # df = pd.read_csv("example_market.csv")
-df = pd.read_csv("example_market.csv") 
+df = pd.read_csv("actual_market.csv") 
+
+pred_df = pd.read_csv("potential_clients_prediction.csv")
+df["vignesh"] = pred_df.premium_charged
 
 # define dirichlet distribution. 
 
@@ -118,6 +121,10 @@ if __name__ == "__main__":
     # cool. 
     awarded_to_company_2 = award_to_company_v2(df)
 
-    print(pd.value_counts(awarded_to_company))
+    # print(pd.value_counts(awarded_to_company))
     # print(pd.value_counts(awarded_to_company_2))
 
+    merged = pd.read_csv("potential_clients_claims.csv")
+    merged.premium_charged = df["vignesh"]
+    merged["awarded"] = [1 if name == "vignesh" else 0 for name in awarded_to_company]
+    merged.to_csv("potential_clients_claims.csv", index=False)
